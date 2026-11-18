@@ -1,47 +1,59 @@
+
+/* ============================================
+   REBOOT CLUB
+   FUNCIONALIDADES DE LA WEB
+   ============================================ */
+
 document.addEventListener("DOMContentLoaded", () => {
+
+    // ELEMENTOS PRINCIPALES
 
     const menuToggle = document.getElementById("menuToggle");
     const navLinks = document.getElementById("navLinks");
-
-    // MENÚ PARA MÓVILES
-
-    menuToggle.addEventListener("click", () => {
-
-        const isOpen = navLinks.classList.toggle("active");
-
-        menuToggle.setAttribute("aria-expanded", isOpen);
-
-        menuToggle.setAttribute(
-            "aria-label",
-            isOpen ? "Cerrar menú" : "Abrir menú"
-        );
-
-    });
+    const header = document.querySelector(".header");
 
 
-    // CERRAR MENÚ AL SELECCIONAR UNA SECCIÓN
+    // MENÚ DE NAVEGACIÓN
 
-    const navigationItems = navLinks.querySelectorAll("a");
+    if (menuToggle && navLinks) {
 
-    navigationItems.forEach((item) => {
+        menuToggle.addEventListener("click", () => {
 
-        item.addEventListener("click", () => {
+            const isOpen = navLinks.classList.toggle("active");
 
-            navLinks.classList.remove("active");
+            menuToggle.setAttribute("aria-expanded", isOpen);
 
-            menuToggle.setAttribute("aria-expanded", "false");
-            menuToggle.setAttribute("aria-label", "Abrir menú");
+            menuToggle.setAttribute(
+                "aria-label",
+                isOpen ? "Cerrar menú" : "Abrir menú"
+            );
 
         });
 
-    });
+
+        // CERRAR MENÚ AL SELECCIONAR UN APARTADO
+
+        navLinks.querySelectorAll("a").forEach(link => {
+
+            link.addEventListener("click", () => {
+
+                navLinks.classList.remove("active");
+
+                menuToggle.setAttribute("aria-expanded", "false");
+                menuToggle.setAttribute("aria-label", "Abrir menú");
+
+            });
+
+        });
+
+    }
 
 
-    // EFECTO AL HACER SCROLL
+    // CAMBIO DE CABECERA AL DESPLAZARSE
 
-    const header = document.querySelector(".header");
+    function updateHeader() {
 
-    window.addEventListener("scroll", () => {
+        if (!header) return;
 
         if (window.scrollY > 40) {
             header.classList.add("scrolled");
@@ -49,20 +61,64 @@ document.addEventListener("DOMContentLoaded", () => {
             header.classList.remove("scrolled");
         }
 
+    }
+
+    window.addEventListener("scroll", updateHeader, {
+        passive: true
+    });
+
+    updateHeader();
+
+
+    // AÑO AUTOMÁTICO
+
+    document.querySelectorAll(".year").forEach(element => {
+        element.textContent = new Date().getFullYear();
     });
 
 
-    // AÑO AUTOMÁTICO DEL FOOTER
+    // ANIMACIONES DE APARICIÓN
 
-    const footerText = document.querySelector(".footer p");
+    const animatedElements = document.querySelectorAll(
+        ".section-heading, .intro-grid, .projects-title, " +
+        ".project-feature, .projects-footer, .heritage-grid, " +
+        ".values-heading, .value-card, .team-intro, " +
+        ".member-card, .collaboration-content, .contact-inner"
+    );
 
-    if (footerText) {
-        footerText.innerHTML =
-            `INDEPENDENT GAME STUDIO<br>
-            © ${new Date().getFullYear()} REBOOT CLUB. TODOS LOS DERECHOS RESERVADOS.`;
+    if ("IntersectionObserver" in window) {
+
+        const observer = new IntersectionObserver((entries, obs) => {
+
+            entries.forEach(entry => {
+
+                if (entry.isIntersecting) {
+
+                    entry.target.classList.add("visible");
+
+                    obs.unobserve(entry.target);
+
+                }
+
+            });
+
+        }, {
+            threshold: 0.12
+        });
+
+
+        animatedElements.forEach(element => {
+
+            element.classList.add("reveal");
+            observer.observe(element);
+
+        });
+
     }
 
 
-    console.log("Reboot Club website initialized.");
+    // MENSAJE DE INICIALIZACIÓN
+
+    console.log("Reboot Club: web inicializada correctamente.");
 
 });
