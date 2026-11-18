@@ -1,8 +1,3 @@
-
-/* =========================================
-   REBOOT CLUB - MAIN JAVASCRIPT
-   ========================================= */
-
 document.addEventListener("DOMContentLoaded", () => {
 
     const menuToggle = document.getElementById("menuToggle");
